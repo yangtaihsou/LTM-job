@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.bitjob.dao.ServerInstanceInfoMapper">
+    <sql id="whereSelectiveSql">
+        <if test="query!= null">
+            <if test="query.id != null">
+                and id = #{query.id}
+            </if>
+
+            <if test="query.serverIp != null and query.serverIp!=''">
+                and serverIp = #{query.serverIp}
+            </if>
+
+            <if test="query.serverPath != null and query.serverPath!=''">
+                and serverPath = #{query.serverPath}
+            </if>
+
+            <if test="query.uuid != null and query.uuid!=''">
+                and uuid = #{query.uuid}
+            </if>
+
+            <if test="query.lastUpdate != null">
+                and lastUpdate > #{query.lastUpdate}
+            </if>
+
+            <if test="query.createTime != null">
+                and createTime = #{query.createTime}
+            </if>
+
+        </if>
+    </sql>
+
+    <!--serverinstanceinfo表所有字段-->
+    <sql id="Base_Column_List">
+        id ,   <!---->
+        serverIp ,   <!---->
+        serverPath ,   <!---->
+        uuid ,   <!---->
+        lastUpdate ,   <!---->
+        createTime     <!---->
+    </sql>
+
+    <!--serverinstanceinfo表除了主键id的所有字段-->
+    <sql id="Base_Column_List_WithOutPk">
+        serverIp ,  <!---->
+        serverPath ,  <!---->
+        uuid ,  <!---->
+        lastUpdate ,  <!---->
+        createTime        <!---->
+    </sql>
+
+    <!--javabean除了主键id的所有字段-->
+    <sql id="Javabean_Column_List_WithOutPk">
+        #{serverIp} ,                    <!---->
+        #{serverPath} ,                    <!---->
+        #{uuid} ,                    <!---->
+        now() ,                    <!---->
+        now()                     <!---->
+    </sql>
+
+    <!--查找serverinstanceinfo表所有数据-->
+    <select id="findAll" resultType="ServerInstanceInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_serverinstanceinfo
+    </select>
+    <!--统计serverinstanceinfo表的数据总量-->
+    <select id="findCount" parameterType="Long" resultType="java.lang.Long">
+        SELECT count(id )
+        FROM job_serverinstanceinfo where 1=1 ,
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+    <!--根据条件，查找serverinstanceinfo表相应数据-->
+    <select id="queryBySelective" parameterType="ServerInstanceInfo" resultType="ServerInstanceInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_serverinstanceinfo where 1=1
+        <include refid="whereSelectiveSql"/>
+        order by id desc
+    </select>
+
+    <!--根据条件，查找serverinstanceinfo表相应数据的总量-->
+    <select id="queryCountBySelective" parameterType="ServerInstanceInfo" resultType="java.lang.Long">
+        SELECT
+        count(id )
+
+        FROM job_serverinstanceinfo where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+    <!--根据主键id，查找serverinstanceinfo表的唯一数据-->
+    <select id="queryByPrimaryKey" parameterType="Long" resultType="ServerInstanceInfo">
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_serverinstanceinfo where id = #{id}
+    </select>
+
+    <!--根据主键id，删除serverinstanceinfo表的唯一数据-->
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+        DELETE FROM job_serverinstanceinfo WHERE id = #{id}
+    </delete>
+
+    <!--根据主键id，更新serverinstanceinfo表相应数据-->
+    <update id="updateByPrimaryKeySelective" parameterType="ServerInstanceInfo">
+        UPDATE job_serverinstanceinfo
+        <set>
+            <if test="id != null">
+                id=#{id},
+            </if>
+            <if test="serverIp != null">
+                serverIp=#{serverIp},
+            </if>
+            <if test="serverPath != null">
+                serverPath=#{serverPath},
+            </if>
+            <if test="uuid != null">
+                uuid=#{uuid},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate=#{lastUpdate},
+            </if>
+            <if test="createTime != null">
+                createTime=#{createTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--保存数据-->
+    <insert id="save" parameterType="ServerInstanceInfo">
+        INSERT INTO job_serverinstanceinfo
+        (
+        <include refid="Base_Column_List_WithOutPk"/>
+        )
+        VALUES
+        (
+        <include refid="Javabean_Column_List_WithOutPk"/>
+        )
+    </insert>
+
+    <!--根据条件，分页查找serverinstanceinfo表相应数据-->
+    <select id="queryBySelectiveForPagination" parameterType="ServerInstanceInfo" resultType="ServerInstanceInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_serverinstanceinfo where 1=1
+        <include refid="whereSelectiveSql"/>
+        order by id LIMIT #{pageNo} , #{pageSize}
+    </select>
+
+    <!--根据条件，分页查找serverinstanceinfo表相应数据的总量-->
+    <select id="queryCountBySelectiveForPagination" parameterType="ServerInstanceInfo" resultType="java.lang.Long">
+        SELECT
+        count(id )
+        FROM job_serverinstanceinfo where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+</mapper>

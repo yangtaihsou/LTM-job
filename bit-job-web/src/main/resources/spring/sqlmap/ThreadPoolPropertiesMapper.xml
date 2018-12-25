@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.bitjob.dao.ThreadPoolPropertiesMapper">
+    <sql id="whereSelectiveSql">
+        <if test="query!= null">
+            <if test="query.id != null">
+                and id = #{query.id}
+            </if>
+
+            <if test="query.taskType != null">
+                and taskType = #{query.taskType}
+            </if>
+
+            <if test="query.corePoolSize != null">
+                and corePoolSize = #{query.corePoolSize}
+            </if>
+
+            <if test="query.maxPoolSize != null">
+                and maxPoolSize = #{query.maxPoolSize}
+            </if>
+
+            <if test="query.keepAliveSeconds != null">
+                and keepAliveSeconds = #{query.keepAliveSeconds}
+            </if>
+
+            <if test="query.allowCoreThreadTimeOut != null">
+                and allowCoreThreadTimeOut = #{query.allowCoreThreadTimeOut}
+            </if>
+
+            <if test="query.queueCapacity != null">
+                and queueCapacity = #{query.queueCapacity}
+            </if>
+
+            <if test="query.lastUpdate != null">
+                and lastUpdate = #{query.lastUpdate}
+            </if>
+
+            <if test="query.createTime != null">
+                and createTime = #{query.createTime}
+            </if>
+
+        </if>
+    </sql>
+
+    <!--threadpoolproperties表所有字段-->
+    <sql id="Base_Column_List">
+        id ,   <!---->
+        taskType ,   <!---->
+        corePoolSize ,   <!---->
+        maxPoolSize ,   <!---->
+        keepAliveSeconds ,   <!---->
+        allowCoreThreadTimeOut ,   <!---->
+        queueCapacity ,   <!---->
+        lastUpdate ,   <!---->
+        createTime     <!---->
+    </sql>
+
+    <!--threadpoolproperties表除了主键id的所有字段-->
+    <sql id="Base_Column_List_WithOutPk">
+        taskType ,  <!---->
+        corePoolSize ,  <!---->
+        maxPoolSize ,  <!---->
+        keepAliveSeconds ,  <!---->
+        allowCoreThreadTimeOut ,  <!---->
+        queueCapacity ,  <!---->
+        lastUpdate ,  <!---->
+        createTime        <!---->
+    </sql>
+
+    <!--javabean除了主键id的所有字段-->
+    <sql id="Javabean_Column_List_WithOutPk">
+        #{taskType} ,                    <!---->
+        #{corePoolSize} ,                    <!---->
+        #{maxPoolSize} ,                    <!---->
+        #{keepAliveSeconds} ,                    <!---->
+        #{allowCoreThreadTimeOut} ,                    <!---->
+        #{queueCapacity} ,                    <!---->
+        now() ,                    <!---->
+        now()                 <!---->
+    </sql>
+
+    <!--查找threadpoolproperties表所有数据-->
+    <select id="findAll" resultType="ThreadPoolProperties">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_threadpoolproperties
+    </select>
+    <!--统计threadpoolproperties表的数据总量-->
+    <select id="findCount" parameterType="Long" resultType="java.lang.Long">
+        SELECT count(id )
+        FROM job_threadpoolproperties where 1=1 ,
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+    <!--根据条件，查找threadpoolproperties表相应数据-->
+    <select id="queryBySelective" parameterType="ThreadPoolProperties" resultType="ThreadPoolProperties">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_threadpoolproperties where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+    <!--根据条件，查找threadpoolproperties表相应数据的总量-->
+    <select id="queryCountBySelective" parameterType="ThreadPoolProperties" resultType="java.lang.Long">
+        SELECT
+        count(id )
+
+        FROM job_threadpoolproperties where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+    <!--根据主键id，查找threadpoolproperties表的唯一数据-->
+    <select id="queryByPrimaryKey" parameterType="Long" resultType="ThreadPoolProperties">
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_threadpoolproperties where id = #{id}
+    </select>
+
+    <!--根据主键id，删除threadpoolproperties表的唯一数据-->
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+        DELETE FROM  job_threadpoolproperties  WHERE id = #{id}
+    </delete>
+
+    <!--根据主键id，更新threadpoolproperties表相应数据-->
+    <update id="updateByPrimaryKeySelective" parameterType="ThreadPoolProperties">
+        UPDATE job_threadpoolproperties
+        <set>
+            <if test="id != null">
+                id=#{id},
+            </if>
+            <if test="taskType != null">
+                taskType=#{taskType},
+            </if>
+            <if test="corePoolSize != null">
+                corePoolSize=#{corePoolSize},
+            </if>
+            <if test="maxPoolSize != null">
+                maxPoolSize=#{maxPoolSize},
+            </if>
+            <if test="keepAliveSeconds != null">
+                keepAliveSeconds=#{keepAliveSeconds},
+            </if>
+            <if test="allowCoreThreadTimeOut != null">
+                allowCoreThreadTimeOut=#{allowCoreThreadTimeOut},
+            </if>
+            <if test="queueCapacity != null">
+                queueCapacity=#{queueCapacity},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate=#{lastUpdate},
+            </if>
+            <if test="createTime != null">
+                createTime=#{createTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--保存数据-->
+    <insert id="save" parameterType="ThreadPoolProperties">
+        INSERT INTO job_threadpoolproperties
+        (
+        <include refid="Base_Column_List_WithOutPk"/>
+        )
+        VALUES
+        (
+        <include refid="Javabean_Column_List_WithOutPk"/>
+        )
+    </insert>
+
+    <!--根据条件，分页查找threadpoolproperties表相应数据-->
+    <select id="queryBySelectiveForPagination" parameterType="ThreadPoolProperties" resultType="ThreadPoolProperties">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_threadpoolproperties where 1=1
+        <include refid="whereSelectiveSql"/>
+        order by id LIMIT #{pageNo} , #{pageSize}
+    </select>
+
+    <!--根据条件，分页查找threadpoolproperties表相应数据的总量-->
+    <select id="queryCountBySelectiveForPagination" parameterType="ThreadPoolProperties" resultType="java.lang.Long">
+        SELECT
+        count(id )
+        FROM job_threadpoolproperties where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+</mapper>

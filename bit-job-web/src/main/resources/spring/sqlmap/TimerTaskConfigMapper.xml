@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.bitjob.dao.TimerTaskConfigMapper">
+    <sql id="whereSelectiveSql">
+        <if test="query!= null">
+            <if test="query.id != null">
+                and id = #{query.id}
+            </if>
+
+            <if test="query.taskTimerType != null">
+                and taskTimerType = #{query.taskTimerType}
+            </if>
+
+            <if test="query.taskTimerKey != null and query.taskTimerKey!=''">
+                and taskTimerKey = #{query.taskTimerKey}
+            </if>
+
+            <if test="query.taskTimerDesc != null and query.taskTimerDesc!=''">
+                and taskTimerDesc = #{query.taskTimerDesc}
+            </if>
+
+            <if test="query.dataType != null and query.dataType!=''">
+                and dataType = #{query.dataType}
+            </if>
+
+            <if test="query.year != null">
+                and year = #{query.year}
+            </if>
+
+            <if test="query.month != null">
+                and month = #{query.month}
+            </if>
+
+            <if test="query.day != null">
+                and day = #{query.day}
+            </if>
+
+            <if test="query.hour != null">
+                and hour = #{query.hour}
+            </if>
+
+            <if test="query.minute != null">
+                and minute = #{query.minute}
+            </if>
+
+            <if test="query.second != null">
+                and second = #{query.second}
+            </if>
+
+            <if test="query.biztime != null">
+                and biztime = #{query.biztime}
+            </if>
+
+            <if test="query.status != null">
+                and status = #{query.status}
+            </if>
+
+            <if test="query.createtime != null">
+                and createtime = #{query.createtime}
+            </if>
+
+            <if test="query.lastupdatetime != null">
+                and lastupdatetime = #{query.lastupdatetime}
+            </if>
+
+        </if>
+    </sql>
+
+    <!--timertaskconfig表所有字段-->
+    <sql id="Base_Column_List">
+        id ,   <!---->
+        taskTimerType ,   <!---->
+        taskTimerKey ,   <!---->
+        taskTimerDesc ,   <!---->
+        dataType ,   <!---->
+        year ,   <!---->
+        month ,   <!---->
+        day ,   <!---->
+        hour ,   <!---->
+        minute ,   <!---->
+        second ,   <!---->
+        biztime ,   <!---->
+        status ,   <!---->
+        createtime ,   <!---->
+        lastupdatetime     <!---->
+    </sql>
+
+    <!--timertaskconfig表除了主键id的所有字段-->
+    <sql id="Base_Column_List_WithOutPk">
+        taskTimerType ,  <!---->
+        taskTimerKey ,  <!---->
+        taskTimerDesc ,  <!---->
+        dataType ,  <!---->
+        year ,  <!---->
+        month ,  <!---->
+        day ,  <!---->
+        hour ,  <!---->
+        minute ,  <!---->
+        second ,  <!---->
+        biztime ,  <!---->
+        status ,  <!---->
+        createtime ,  <!---->
+        lastupdatetime        <!---->
+    </sql>
+
+    <!--javabean除了主键id的所有字段-->
+    <sql id="Javabean_Column_List_WithOutPk">
+        #{taskTimerType} ,                    <!---->
+        #{taskTimerKey} ,                    <!---->
+        #{taskTimerDesc} ,                    <!---->
+        #{dataType} ,                    <!---->
+        #{year} ,                    <!---->
+        #{month} ,                    <!---->
+        #{day} ,                    <!---->
+        #{hour} ,                    <!---->
+        #{minute} ,                    <!---->
+        #{second} ,                    <!---->
+        now() ,                        <!---->
+        #{status} ,                    <!---->
+        now() ,                        <!---->
+        now()                         <!---->
+    </sql>
+
+    <!--查找timertaskconfig表所有数据-->
+    <select id="findAll" resultType="TimerTaskConfig">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_timertaskconfig
+    </select>
+    <!--统计timertaskconfig表的数据总量-->
+    <select id="findCount" parameterType="Long" resultType="java.lang.Long">
+        SELECT count(id )
+        FROM job_timertaskconfig where 1=1 ,
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+    <!--根据条件，查找timertaskconfig表相应数据-->
+    <select id="queryBySelective" parameterType="TimerTaskConfig" resultType="TimerTaskConfig">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_timertaskconfig where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+    <!--根据条件，查找timertaskconfig表相应数据的总量-->
+    <select id="queryCountBySelective" parameterType="TimerTaskConfig" resultType="java.lang.Long">
+        SELECT
+        count(id )
+
+        FROM job_timertaskconfig where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+    <!--根据主键id，查找timertaskconfig表的唯一数据-->
+    <select id="queryByPrimaryKey" parameterType="Long" resultType="TimerTaskConfig">
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_timertaskconfig where id = #{id}
+    </select>
+
+    <!--根据主键id，删除timertaskconfig表的唯一数据-->
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+        DELETE FROM job_timertaskconfig  WHERE id = #{id}
+    </delete>
+
+    <!--根据主键id，更新timertaskconfig表相应数据-->
+    <update id="updateByPrimaryKeySelective" parameterType="TimerTaskConfig">
+        UPDATE job_timertaskconfig
+        <set>
+            <if test="id != null">
+                id=#{id},
+            </if>
+            <if test="taskTimerType != null">
+                taskTimerType=#{taskTimerType},
+            </if>
+            <if test="taskTimerKey != null">
+                taskTimerKey=#{taskTimerKey},
+            </if>
+            <if test="taskTimerDesc != null">
+                taskTimerDesc=#{taskTimerDesc},
+            </if>
+            <if test="dataType != null">
+                dataType=#{dataType},
+            </if>
+            <if test="year != null">
+                year=#{year},
+            </if>
+            <if test="month != null">
+                month=#{month},
+            </if>
+            <if test="day != null">
+                day=#{day},
+            </if>
+            <if test="hour != null">
+                hour=#{hour},
+            </if>
+            <if test="minute != null">
+                minute=#{minute},
+            </if>
+            <if test="second != null">
+                second=#{second},
+            </if>
+            <if test="biztime != null">
+                biztime=#{biztime},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createtime != null">
+                createtime=#{createtime},
+            </if>
+            <if test="lastupdatetime != null">
+                lastupdatetime=#{lastupdatetime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="update" parameterType="TimerTaskConfig">
+        UPDATE job_timertaskconfig
+        <set>
+            <if test="id != null">
+                id=#{id},
+            </if>
+            <if test="taskTimerType != null">
+                taskTimerType=#{taskTimerType},
+            </if>
+            <if test="taskTimerKey != null">
+                taskTimerKey=#{taskTimerKey},
+            </if>
+            <if test="taskTimerDesc != null">
+                taskTimerDesc=#{taskTimerDesc},
+            </if>
+            <if test="dataType != null">
+                dataType=#{dataType},
+            </if>
+            <if test="year != null">
+                year=#{year},
+            </if>
+            <if test="month != null">
+                month=#{month},
+            </if>
+            <if test="day != null">
+                day=#{day},
+            </if>
+            <if test="hour != null">
+                hour=#{hour},
+            </if>
+            <if test="minute != null">
+                minute=#{minute},
+            </if>
+            <if test="second != null">
+                second=#{second},
+            </if>
+            <if test="biztime != null">
+                biztime=#{biztime},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createtime != null">
+                createtime=#{createtime},
+            </if>
+            <if test="lastupdatetime != null">
+                lastupdatetime=#{lastupdatetime},
+            </if>
+        </set>
+    </update>
+
+    <!--保存数据-->
+    <insert id="save" parameterType="TimerTaskConfig">
+        INSERT INTO job_timertaskconfig
+        (
+        <include refid="Base_Column_List_WithOutPk"/>
+        )
+        VALUES
+        (
+        <include refid="Javabean_Column_List_WithOutPk"/>
+        )
+    </insert>
+
+    <!--根据条件，分页查找timertaskconfig表相应数据-->
+    <select id="queryBySelectiveForPagination" parameterType="TimerTaskConfig" resultType="TimerTaskConfig">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_timertaskconfig where 1=1
+        <include refid="whereSelectiveSql"/>
+        order by id LIMIT #{pageNo} , #{pageSize}
+    </select>
+
+    <!--根据条件，分页查找timertaskconfig表相应数据的总量-->
+    <select id="queryCountBySelectiveForPagination" parameterType="TimerTaskConfig" resultType="java.lang.Long">
+        SELECT
+        count(id )
+        FROM job_timertaskconfig where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+    <delete id="deleteByUniqueIndextaskTimerType" parameterType="TimerTaskConfig">
+            DELETE FROM job_timertaskconfig  WHERE      taskTimerType=#{taskTimerType} and   1=1
+        </delete>
+    <delete id="deleteByUniqueIndextaskTimerKey" parameterType="TimerTaskConfig">
+            DELETE FROM job_timertaskconfig  WHERE      taskTimerKey=#{taskTimerKey} and   1=1
+        </delete>
+
+
+    <!--新增-->
+    <select id="findByBizTime" parameterType="TimerTaskConfig" resultType="TimerTaskConfig">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_timertaskconfig where status=#{status} and    <![CDATA[ biztime < #{biztime} ]]>
+    </select>
+</mapper>

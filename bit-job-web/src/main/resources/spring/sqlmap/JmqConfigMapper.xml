@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.bitjob.dao.JmqConfigMapper">
+
+
+    <!--根据条件，查找job_jmqconfig表相应数据-->
+    <select id="queryBySelective" parameterType="JmqConfig" resultType="JmqConfig">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_jmqconfig where
+        <include refid="whereQuerySelectiveSql"/>
+        1=1
+    </select>
+
+    <!--根据条件，查找job_jmqconfig表相应数据的总量-->
+    <select id="queryCountBySelective" parameterType="JmqConfig" resultType="java.lang.Long">
+        SELECT
+        count(id )
+
+        FROM job_jmqconfig where
+        <include refid="whereSelectiveSql"/>
+        1=1
+    </select>
+
+
+    <!--根据主键id，查找job_jmqconfig表的唯一数据-->
+    <select id="queryByPrimaryKey" parameterType="Long" resultType="JmqConfig">
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_jmqconfig where id = #{id}
+    </select>
+
+    <!--根据主键id，删除job_jmqconfig表的唯一数据-->
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+        DELETE FROM job_jmqconfig WHERE id = #{id}
+    </delete>
+
+    <!--根据主键id，更新job_jmqconfig表相应数据-->
+    <update id="updateByPrimaryKey" parameterType="JmqConfig">
+        UPDATE job_jmqconfig
+        <set>
+            <include refid="updateSetSql"/>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--保存数据-->
+    <insert id="save" parameterType="JmqConfig">
+        INSERT INTO job_jmqconfig
+        (
+        <include refid="Base_Column_List_WithOutPk"/>
+        )
+        VALUES
+        (
+        <include refid="Javabean_Column_List_WithOutPk"/>
+        )
+    </insert>
+
+    <!--根据条件，分页查找job_jmqconfig表相应数据-->
+    <select id="queryBySelectiveForPagination" parameterType="JmqConfig" resultType="JmqConfig">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_jmqconfig where
+        <include refid="whereQuerySelectiveSql"/>
+        1=1
+        order by id LIMIT #{pageNo} , #{pageSize}
+    </select>
+
+
+    <select id="queryByJmqApp" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_jmqconfig WHERE jmqApp=#{jmqApp} and 1=1
+    </select>
+
+    <update id="updateByJmqApp" parameterType="JmqConfig">
+        UPDATE job_jmqconfig
+        <set>
+            <include refid="updateSetSql"/>
+        </set>
+        WHERE jmqApp=#{jmqApp} and 1=1
+    </update>
+
+
+    <!--job_jmqconfig表所有字段-->
+    <sql id="Base_Column_List">
+        id ,   <!---->
+        jmqApp ,   <!---->
+        jmqPass ,   <!---->
+        jmqAddress ,   <!---->
+        systemCode ,   <!---->
+        systemName ,   <!---->
+        status ,   <!---->
+        createDate ,   <!---->
+        updateDate     <!---->
+    </sql>
+
+    <!--job_jmqconfig表除了主键id的所有字段-->
+    <sql id="Base_Column_List_WithOutPk">
+        jmqApp ,  <!---->
+        jmqPass ,  <!---->
+        jmqAddress ,  <!---->
+        systemCode ,  <!---->
+        systemName ,  <!---->
+        status ,  <!---->
+        createDate ,  <!---->
+        updateDate        <!---->
+    </sql>
+
+    <!--javabean除了主键id的所有字段-->
+    <sql id="Javabean_Column_List_WithOutPk">
+        #{jmqApp} ,                     <!---->
+        #{jmqPass} ,                     <!---->
+        #{jmqAddress} ,                     <!---->
+        #{systemCode} ,                     <!---->
+        #{systemName} ,                     <!---->
+        #{status} ,                     <!---->
+        #{createDate} ,                     <!---->
+        #{updateDate}                      <!---->
+    </sql>
+
+
+    <sql id="updateSetSql">
+        <if test="id != null">
+            id=#{id},
+        </if>
+        <if test="jmqApp != null">
+            jmqApp=#{jmqApp},
+        </if>
+        <if test="jmqPass != null">
+            jmqPass=#{jmqPass},
+        </if>
+        <if test="jmqAddress != null">
+            jmqAddress=#{jmqAddress},
+        </if>
+        <if test="systemCode != null">
+            systemCode=#{systemCode},
+        </if>
+        <if test="systemName != null">
+            systemName=#{systemName},
+        </if>
+        <if test="status != null">
+            status=#{status},
+        </if>
+        <if test="createDate != null">
+            createDate=#{createDate},
+        </if>
+        <if test="updateDate != null">
+            updateDate=#{updateDate},
+        </if>
+    </sql>
+
+
+    <sql id="whereQuerySelectiveSql">
+        <if test="query!= null">
+            <if test="query.id != null">
+                id = #{query.id} and
+            </if>
+
+            <if test="query.jmqApp != null and query.jmqApp!=''">
+                jmqApp = #{query.jmqApp} and
+            </if>
+
+            <if test="query.jmqPass != null and query.jmqPass!=''">
+                jmqPass = #{query.jmqPass} and
+            </if>
+
+            <if test="query.jmqAddress != null and query.jmqAddress!=''">
+                jmqAddress = #{query.jmqAddress} and
+            </if>
+
+            <if test="query.systemCode != null and query.systemCode!=''">
+                systemCode = #{query.systemCode} and
+            </if>
+
+            <if test="query.systemName != null and query.systemName!=''">
+                systemName = #{query.systemName} and
+            </if>
+
+            <if test="query.status != null">
+                status = #{query.status} and
+            </if>
+
+            <if test="query.createDate != null">
+                createDate = #{query.createDate} and
+            </if>
+
+            <if test="query.updateDate != null">
+                updateDate = #{query.updateDate} and
+            </if>
+
+        </if>
+    </sql>
+
+    <sql id="whereSelectiveSql">
+
+        <if test="id != null">
+            id = #{id} and
+        </if>
+
+        <if test="jmqApp != null and jmqApp!=''">
+            jmqApp = #{jmqApp} and
+        </if>
+
+        <if test="jmqPass != null and jmqPass!=''">
+            jmqPass = #{jmqPass} and
+        </if>
+
+        <if test="jmqAddress != null and jmqAddress!=''">
+            jmqAddress = #{jmqAddress} and
+        </if>
+
+        <if test="systemCode != null and systemCode!=''">
+            systemCode = #{systemCode} and
+        </if>
+
+        <if test="systemName != null and systemName!=''">
+            systemName = #{systemName} and
+        </if>
+
+        <if test="status != null">
+            status = #{status} and
+        </if>
+
+        <if test="createDate != null">
+            createDate = #{createDate} and
+        </if>
+
+        <if test="updateDate != null">
+            updateDate = #{updateDate} and
+        </if>
+
+
+    </sql>
+</mapper>

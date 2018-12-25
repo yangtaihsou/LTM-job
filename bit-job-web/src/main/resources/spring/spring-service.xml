@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+       default-autowire="byName" default-lazy-init="true">
+
+    <bean id="generateTimerTaskExecuteService"
+          class="io.bitjob.schedule.base.service.impl.GenerateTimerTaskExecuteServiceImpl"/>
+    <bean id="mqProductService" class="io.bitjob.biz.service.NotifyProducerService"/>
+
+
+    <bean id="serviceMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="mqProductService" value="mq生产"></entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+
+    <!-- 所有任务key -->
+    <bean name="schedulerMap" class="java.util.LinkedHashMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="org.quartz.Scheduler">
+                <entry key="taskUnlockScheduler" value-ref="taskUnlockScheduler"/>
+                <entry key="generateTimerTaskScheduler" value-ref="generateTimerTaskScheduler"/>
+                <entry key="taskDeleteScheduler" value-ref="taskDeleteScheduler"/>
+                <entry key="bizNewQuartz" value-ref="bizNewQuartzScheduler"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <util:map id="timerTypeConfig" map-class="java.util.LinkedHashMap" key-type="java.lang.String">
+
+        <entry key="year" value="年"/>
+        <entry key="month" value="月"/>
+        <entry key="day" value="日"/>
+        <entry key="hour" value="时"/>
+        <entry key="minute" value="分"/>
+        <entry key="second" value="秒"/>
+
+    </util:map>
+
+
+    <util:map id="allCache" key-type="java.lang.String" value-type="io.bitjob.service.cache.Cache">
+        <entry key="taskServiceConfigCache" value-ref="taskServiceConfigCache"/>
+        <entry key="timerTaskConfigCache" value-ref="timerTaskConfigCache"/>
+        <entry key="threadPoolCache" value-ref="threadPoolPersistence"/>
+        <entry key="jmqConfigCache" value-ref="jmqConfigCache"/>
+    </util:map>
+</beans>

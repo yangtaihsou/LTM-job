@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       default-autowire="byName">
+
+    <!-- 定时解锁任务定时器 -->
+
+
+    <bean id="taskDeleteExecutor" class="io.bitjob.schedule.base.impl.TaskDeleteScheduleExecutorImpl">
+        <!--要多少天前的-->
+        <property name="days" value="-3"/>
+    </bean>
+
+
+    <bean id="taskDeleteHandler" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="taskDeleteExecutor"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="true"/>
+    </bean>
+
+    <!--
+        <bean id="taskDeleteCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail" ref="taskDeleteHandler" />
+            <property name="cronExpression" value="2 10 * * * ?" />
+        </bean>-->
+
+
+    <bean id="taskDeleteCronTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="jobDetail" ref="taskDeleteHandler"/>
+        <property name="repeatInterval" value="180000"/>
+        <property name="startDelay" value="1000"/>
+    </bean>
+
+    <!-- 定时任务触发器 -->
+    <bean id="taskDeleteScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+
+                <!--****************************-->
+                <!--******** 任务 ********-->
+                <!--****************************-->
+                <ref local="taskDeleteCronTrigger"/>
+
+            </list>
+        </property>
+        <property name="autoStartup">
+            <value>false</value>
+        </property>
+        <property name="schedulerName" value="删除调度"/>
+    </bean>
+
+</beans>

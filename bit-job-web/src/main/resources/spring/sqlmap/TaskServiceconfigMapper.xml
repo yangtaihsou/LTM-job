@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.bitjob.dao.TaskServiceConfigMapper">
+    <sql id="whereSelectiveSql">
+        <if test="query!= null">
+            <if test="query.id != null">
+                and id = #{query.id}
+            </if>
+
+            <if test="query.taskType != null">
+                and taskType = #{query.taskType}
+            </if>
+
+            <if test="query.taskTypeKey != null and query.taskTypeKey!=''">
+                and taskTypeKey = #{query.taskTypeKey}
+            </if>
+
+            <if test="query.taskTypeDesc != null and query.taskTypeDesc!=''">
+                and taskTypeDesc = #{query.taskTypeDesc}
+            </if>
+
+            <if test="query.taskService != null and query.taskService!=''">
+                and taskService = #{query.taskService}
+            </if>
+
+            <if test="query.taskParentType != null">
+                and taskParentType = #{query.taskParentType}
+            </if>
+
+            <if test="query.taskParentTypeDesc != null and query.taskParentTypeDesc!=''">
+                and taskParentTypeDesc = #{query.taskParentTypeDesc}
+            </if>
+
+            <if test="query.status != null">
+                and status = #{query.status}
+            </if>
+
+            <if test="query.createtime != null">
+                and createtime = #{query.createtime}
+            </if>
+
+            <if test="query.lastupdatetime != null">
+                and lastupdatetime = #{query.lastupdatetime}
+            </if>
+
+            <if test="query.taskTotalSize != null">
+                and taskTotalSize = #{query.taskTotalSize}
+            </if>
+            <if test="query.lastupdatetime != null">
+                and taskSizePerThread = #{query.taskSizePerThread}
+            </if>
+            <if test="query.lastupdatetime != null">
+                and lockType = #{query.lockType}
+            </if>
+            <if test="query.lastupdatetime != null">
+                and repeatInterval = #{query.repeatInterval}
+            </if>
+
+        </if>
+    </sql>
+
+    <!--taskserviceconfig表所有字段-->
+    <sql id="Base_Column_List">
+        id ,   <!---->
+        taskType ,   <!---->
+        taskTypeKey ,   <!---->
+        taskTypeDesc ,   <!---->
+        taskService ,   <!---->
+        taskParentType ,   <!---->
+        taskParentTypeDesc ,   <!---->
+        status ,   <!---->
+        taskTotalSize,taskSizePerThread,lockType,repeatInterval,
+        createtime ,   <!---->
+        lastupdatetime,     <!---->
+
+        jmqApp ,   <!---->
+        jmqTopic     <!---->
+    </sql>
+
+    <!--taskserviceconfig表除了主键id的所有字段-->
+    <sql id="Base_Column_List_WithOutPk">
+        taskType ,  <!---->
+        taskTypeKey ,  <!---->
+        taskTypeDesc ,  <!---->
+        taskService ,  <!---->
+        taskParentType ,  <!---->
+        taskParentTypeDesc ,  <!---->
+        status ,  <!---->
+        taskTotalSize,taskSizePerThread,lockType,repeatInterval,
+        createtime ,  <!---->
+        lastupdatetime ,     <!---->
+
+        jmqApp ,   <!---->
+        jmqTopic     <!---->
+    </sql>
+
+    <!--javabean除了主键id的所有字段-->
+    <sql id="Javabean_Column_List_WithOutPk">
+        #{taskType} ,                    <!---->
+        #{taskTypeKey} ,                    <!---->
+        #{taskTypeDesc} ,                    <!---->
+        #{taskService} ,                    <!---->
+        #{taskParentType} ,                    <!---->
+        #{taskParentTypeDesc} ,                    <!---->
+        #{status} ,                    <!---->#{taskTotalSize},
+        #{taskSizePerThread},
+        #{lockType},
+        #{repeatInterval},
+        now() ,                        <!---->
+        now() ,
+        #{jmqApp},
+        #{jmqTopic}
+
+    </sql>
+
+    <!--查找taskserviceconfig表所有数据-->
+    <select id="findAll" resultType="TaskServiceConfig">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_taskserviceconfig
+    </select>
+    <!--统计taskserviceconfig表的数据总量-->
+    <select id="findCount" parameterType="Long" resultType="java.lang.Long">
+        SELECT count(id )
+        FROM job_taskserviceconfig where 1=1 ,
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+    <!--根据条件，查找taskserviceconfig表相应数据-->
+    <select id="queryBySelective" parameterType="TaskServiceConfig" resultType="TaskServiceConfig">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_taskserviceconfig where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+    <!--根据条件，查找taskserviceconfig表相应数据的总量-->
+    <select id="queryCountBySelective" parameterType="TaskServiceConfig" resultType="java.lang.Long">
+        SELECT
+        count(id )
+
+        FROM job_taskserviceconfig where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+    <!--根据主键id，查找taskserviceconfig表的唯一数据-->
+    <select id="queryByPrimaryKey" parameterType="Long" resultType="TaskServiceConfig">
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_taskserviceconfig where id = #{id}
+    </select>
+
+    <!--根据主键id，删除taskserviceconfig表的唯一数据-->
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+        DELETE FROM job_taskserviceconfig WHERE id = #{id}
+    </delete>
+
+    <!--根据主键id，更新taskserviceconfig表相应数据-->
+    <update id="updateByPrimaryKeySelective" parameterType="TaskServiceConfig">
+        UPDATE job_taskserviceconfig
+        <set>
+            <if test="id != null">
+                id=#{id},
+            </if>
+            <if test="taskType != null">
+                taskType=#{taskType},
+            </if>
+            <if test="taskTypeKey != null">
+                taskTypeKey=#{taskTypeKey},
+            </if>
+            <if test="taskTypeDesc != null">
+                taskTypeDesc=#{taskTypeDesc},
+            </if>
+            <if test="taskService != null">
+                taskService=#{taskService},
+            </if>
+            <if test="taskParentType != null">
+                taskParentType=#{taskParentType},
+            </if>
+            <if test="taskParentTypeDesc != null">
+                taskParentTypeDesc=#{taskParentTypeDesc},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createtime != null">
+                createtime=#{createtime},
+            </if>
+            <if test="lastupdatetime != null">
+                lastupdatetime=#{lastupdatetime},
+            </if>
+
+            <if test="taskTotalSize != null">
+                taskTotalSize=#{taskTotalSize},
+            </if>
+            <if test="taskSizePerThread != null">
+                taskSizePerThread=#{taskSizePerThread},
+            </if>
+            <if test="lockType != null">
+                lockType=#{lockType},
+            </if>
+            <if test="repeatInterval != null">
+                repeatInterval=#{repeatInterval},
+            </if>
+
+            <if test="jmqApp != null">
+                jmqApp=#{jmqApp},
+            </if>
+
+            <if test="jmqTopic != null">
+                jmqTopic=#{jmqTopic},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="update" parameterType="TaskServiceConfig">
+        UPDATE job_taskserviceconfig
+        <set>
+            <if test="id != null">
+                id=#{id},
+            </if>
+            <if test="taskType != null">
+                taskType=#{taskType},
+            </if>
+            <if test="taskTypeKey != null">
+                taskTypeKey=#{taskTypeKey},
+            </if>
+            <if test="taskTypeDesc != null">
+                taskTypeDesc=#{taskTypeDesc},
+            </if>
+            <if test="taskService != null">
+                taskService=#{taskService},
+            </if>
+            <if test="taskParentType != null">
+                taskParentType=#{taskParentType},
+            </if>
+            <if test="taskParentTypeDesc != null">
+                taskParentTypeDesc=#{taskParentTypeDesc},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createtime != null">
+                createtime=#{createtime},
+            </if>
+            <if test="lastupdatetime != null">
+                lastupdatetime=#{lastupdatetime},
+            </if>
+            <if test="taskTotalSize != null">
+                taskTotalSize=#{taskTotalSize},
+            </if>
+            <if test="taskSizePerThread != null">
+                taskSizePerThread=#{taskSizePerThread},
+            </if>
+            <if test="lockType != null">
+                lockType=#{lockType},
+            </if>
+            <if test="repeatInterval != null">
+                repeatInterval=#{repeatInterval},
+            </if>
+            <if test="jmqApp != null">
+                jmqApp=#{jmqApp},
+            </if>
+
+            <if test="jmqTopic != null">
+                jmqTopic=#{jmqTopic},
+            </if>
+        </set>
+    </update>
+
+    <!--保存数据-->
+    <insert id="save" parameterType="TaskServiceConfig">
+        INSERT INTO job_taskserviceconfig
+        (
+        <include refid="Base_Column_List_WithOutPk"/>
+        )
+        VALUES
+        (
+        <include refid="Javabean_Column_List_WithOutPk"/>
+        )
+    </insert>
+
+    <!--根据条件，分页查找taskserviceconfig表相应数据-->
+    <select id="queryBySelectiveForPagination" parameterType="TaskServiceConfig" resultType="TaskServiceConfig">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_taskserviceconfig where 1=1
+        <include refid="whereSelectiveSql"/>
+        order by id LIMIT #{pageNo} , #{pageSize}
+    </select>
+
+    <!--根据条件，分页查找taskserviceconfig表相应数据的总量-->
+    <select id="queryCountBySelectiveForPagination" parameterType="TaskServiceConfig" resultType="java.lang.Long">
+        SELECT
+        count(id )
+        FROM job_taskserviceconfig where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+</mapper>

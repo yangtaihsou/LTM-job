@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       default-autowire="byName">
+
+
+    <bean id="generateTimerTaskExecutor" class="io.bitjob.schedule.base.impl.GenerateTimerTaskExecutorImpl">
+    </bean>
+
+
+    <bean id="generateTimerTaskHandler"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="generateTimerTaskExecutor"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="true"/>
+        <!--	<property name="arguments" >
+                <list>
+                    &lt;!&ndash; a primitive type (a string) &ndash;&gt;
+                    <value>1st</value>
+                    &lt;!&ndash; an inner object definition is passed as the second argument &ndash;&gt;
+
+                    &lt;!&ndash; a reference to another objects is passed as the third argument &ndash;&gt;
+                    <ref bean="generateTimerTaskExecutor" />
+                    &lt;!&ndash; another list is passed as the fourth argument &ndash;&gt;
+                    <list>
+                        <value>http://www.springframework.net/</value>
+                    </list>
+                </list>
+            </property>-->
+    </bean>
+
+    <!--
+        <bean id="generateTimerTaskCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail" ref="generateTimerTaskHandler" />
+            <property name="cronExpression" value="0/2 * * * * ?" />
+        </bean>-->
+
+
+    <bean id="generateTimerTaskCronTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="jobDetail" ref="generateTimerTaskHandler"/>
+        <property name="repeatInterval" value="10000"/>
+        <property name="startDelay" value="1000"/>
+    </bean>
+
+    <!-- 定时任务触发器 -->
+    <bean id="generateTimerTaskScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+
+                <!--****************************-->
+                <!--******** 任务 ********-->
+                <!--****************************-->
+                <ref local="generateTimerTaskCronTrigger"/>
+
+            </list>
+        </property>
+        <property name="autoStartup">
+            <value>true</value>
+        </property>
+        <property name="schedulerName" value="生产timer的调度"/>
+    </bean>
+
+</beans>

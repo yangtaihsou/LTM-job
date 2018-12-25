@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.bitjob.dao.TaskMapper">
+
+    <sql id="whereSelectiveSql">
+        <if test="query!= null">
+            <if test="query.id != null">
+                and ID = #{query.id}
+            </if>
+
+            <!--       <if test="query.insuranceId != null and query.insuranceId!=''">
+                       and   INSURANCEID = #{query.insuranceId}
+                   </if>-->
+
+            <if test="query.bizOrderId != null and query.bizOrderId!=''">
+                and BIZORDERID = #{query.bizOrderId}
+            </if>
+            <if test="query.jrOrderId != null and query.jrOrderId!=''">
+                and JRORDERID = #{query.jrOrderId}
+            </if>
+
+            <if test="query.taskType != null">
+                and TASKTYPE = #{query.taskType}
+            </if>
+
+            <if test="query.taskData != null and query.taskData!=''">
+                and TASKDATA = #{query.taskData}
+            </if>
+
+            <if test="query.taskStatus != null">
+                and TASKSTATUS = #{query.taskStatus}
+            </if>
+
+            <if test="query.retryCount != null">
+                and RETRYCOUNT = #{query.retryCount}
+            </if>
+
+            <if test="query.uuid != null and query.uuid!=''">
+                and UUID = #{query.uuid}
+            </if>
+
+            <if test="query.bizTime != null">
+                and BIZTIME = #{query.bizTime}
+            </if>
+
+            <if test="query.resultStatus != null">
+                and RESULTSTATUS = #{query.resultStatus}
+            </if>
+
+            <if test="query.lastUpdate != null">
+                and <![CDATA[ CREATETIME <= #{query.lastUpdate} ]]>
+            </if>
+
+            <if test="query.createTime != null">
+                and  <![CDATA[ CREATETIME > #{query.createTime} ]]>
+            </if>
+
+        </if>
+    </sql>
+
+    <!--task表所有字段-->
+    <sql id="Base_Column_List">
+        ID ,   <!---->
+        <!-- INSURANCEID  ,   &lt;!&ndash;&ndash;&gt;-->
+        BIZORDERID ,JRORDERID ,
+        TASKTYPE ,   <!---->
+        TASKDATA ,   <!---->
+        TASKSTATUS ,   <!---->
+        RETRYCOUNT ,   <!---->
+        UUID ,   <!---->
+        errorMsg,
+        BIZTIME ,   <!---->
+        RESULTSTATUS ,   <!---->
+        LASTUPDATE ,   <!---->
+        CREATETIME     <!---->
+    </sql>
+
+    <!--task表除了主键ID的所有字段-->
+    <sql id="Base_Column_List_WithOutPk">
+        <!--INSURANCEID      ,  &lt;!&ndash;&ndash;&gt;-->
+        BIZORDERID ,JRORDERID ,
+        TASKTYPE ,  <!---->
+        TASKDATA ,  <!---->
+        TASKSTATUS ,  <!---->
+        RETRYCOUNT ,  <!---->
+        UUID ,  <!---->
+        errorMsg,
+        BIZTIME ,  <!---->
+        RESULTSTATUS ,  <!---->
+        LASTUPDATE ,  <!---->
+        CREATETIME        <!---->
+    </sql>
+
+    <!--javabean除了主键iD的所有字段-->
+    <sql id="Javabean_Column_List_WithOutPk">
+        <!-- #{insuranceId} ,                    &lt;!&ndash;&ndash;&gt;-->
+        #{bizOrderId} , #{jrOrderId} ,
+        #{taskType} ,                    <!---->
+        #{taskData} ,                    <!---->
+        #{taskStatus} ,                    <!---->
+        0 ,                    <!---->
+        #{uuid} ,                    <!---->
+        #{errorMsg} ,
+        #{bizTime} ,                        <!---->
+        #{resultStatus} ,                    <!---->
+        now() ,                    <!---->
+        now()                         <!---->
+    </sql>
+
+    <!--查找task表所有数据-->
+    <select id="findAll" resultType="Task">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM task
+    </select>
+    <!--统计task表的数据总量-->
+    <select id="findCount" parameterType="Long" resultType="java.lang.Long">
+        SELECT count(ID )
+        FROM job_task where 1=1 ,
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+    <!--根据条件，查找task表相应数据-->
+    <select id="queryBySelective" parameterType="Task" resultType="Task">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_task where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+    <!--根据条件，查找task表相应数据的总量-->
+    <select id="queryCountBySelective" parameterType="Task" resultType="java.lang.Long">
+        SELECT
+        count(ID )
+
+        FROM job_task where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+    <!--根据主键ID，查找task表的唯一数据-->
+    <select id="queryByPrimaryKey" parameterType="Long" resultType="Task">
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_task where ID = #{iD}
+    </select>
+
+    <!--根据主键ID，删除task表的唯一数据-->
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+        DELETE FROM  job_task WHERE ID = #{iD}
+    </delete>
+
+    <!--根据主键ID，更新task表相应数据-->
+    <update id="updateByPrimaryKeySelective" parameterType="Task">
+        UPDATE job_task
+        <set>
+            <if test="id != null">
+                ID=#{id},
+            </if>
+            <!-- <if test="insuranceId != null">
+                 INSURANCEID=#{insuranceId},
+             </if>-->
+
+            <if test="taskType != null">
+                TASKTYPE=#{taskType},
+            </if>
+            <if test="taskData != null">
+                TASKDATA=#{taskData},
+            </if>
+            <if test="taskStatus != null">
+                TASKSTATUS=#{taskStatus},
+            </if>
+            <if test="retryCount != null">
+                RETRYCOUNT=#{retryCount},
+            </if>
+            <if test="uuid != null">
+                UUID=#{uuid},
+            </if>
+            <if test="bizTime != null">
+                BIZTIME=#{bizTime},
+            </if>
+            <if test="resultStatus != null">
+                RESULTSTATUS=#{resultStatus},
+            </if>
+            <if test="lastUpdate != null">
+                LASTUPDATE=#{lastUpdate},
+            </if>
+            <if test="createTime != null">
+                CREATETIME=#{createTime},
+            </if>
+        </set>
+        WHERE ID = #{iD}
+    </update>
+
+    <!--保存数据-->
+    <insert id="save" parameterType="Task">
+        INSERT INTO job_task
+        (
+        <include refid="Base_Column_List_WithOutPk"/>
+        )
+        VALUES
+        (
+        <include refid="Javabean_Column_List_WithOutPk"/>
+        )
+    </insert>
+
+    <!--根据条件，分页查找task表相应数据-->
+    <select id="queryBySelectiveForPagination" parameterType="Task" resultType="Task">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_task where 1=1
+        <include refid="whereSelectiveSql"/>
+        order by ID desc LIMIT #{pageNo} , #{pageSize}
+    </select>
+
+    <!--根据条件，分页查找task表相应数据的总量-->
+    <select id="queryCountBySelectiveForPagination" parameterType="Task" resultType="java.lang.Long">
+        SELECT
+        count(ID )
+        FROM job_task where 1=1
+        <include refid="whereSelectiveSql"/>
+    </select>
+
+
+    <delete id="deleteByUniqueIndexuuid" parameterType="Task">
+        DELETE FROM  job_task WHERE      UUID=#{uuid} and   1=1
+    </delete>
+
+    <!--以下为新增-->
+    <select id="findByTaskType" parameterType="Task" resultType="Task">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_task where taskType=#{taskType} and taskStatus=#{taskStatus} and    <![CDATA[ bizTime < #{bizTime} ]]>
+        limit 0,100
+    </select>
+    <!--根据map里的条件查找任务-->
+    <select id="findTaskByMapParm" parameterType="java.util.Map" resultType="Task">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_task where taskType=#{taskType} and taskStatus=#{taskStatus} and    <![CDATA[ bizTime < #{bizTime} ]]>
+        and id%#{instanceCount}=#{index}
+        <!--        limit #{index},#{countSize}-->
+        limit 0,100
+    </select>
+
+
+    <!--taskStatus=#taskStatusLock# and lastUpdate < #lastUpdate# and retryCount < #retryCount#  limit 0,100-->
+    <select id="selectLockedTask" parameterType="Task" resultType="Task">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_task where taskStatus=1
+        and        <![CDATA[ lastUpdate < #{lastUpdate} ]]>
+        and <![CDATA[retryCount < #{retryCount}]]>
+        limit 0,100
+    </select>
+
+    <!--根据主键id，更改任务状态为完成-->
+    <update id="finishTask" parameterType="Task">
+           UPDATE  job_task set
+            taskStatus=2,lastUpdate=now()
+        WHERE id = #{id}
+    </update>
+    <!--根据主键id，将初始任务锁定-->
+    <update id="lockTask" parameterType="Task">
+           UPDATE  job_task set
+            taskStatus=1,lastUpdate=now()
+        WHERE id = #{id} and taskStatus=0
+    </update>
+
+    <select id="findFromDate" parameterType="Task" resultType="Task">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM job_task where taskStatus=#{taskStatus} and    <![CDATA[ bizTime < #{bizTime} ]]>
+        limit 0,200
+    </select>
+
+    <update id="unLockTask" parameterType="Task">
+    <![CDATA[
+
+			update	job_task
+			set taskStatus = 0,retryCount = retryCount+1,lastUpdate =now(),bizTime=now()
+			where id = #{id} and taskStatus=1 and retryCount = #{retryCount}
+
+        ]]>
+    </update>
+
+    <update id="resetTaskById" parameterType="Task">
+        update job_task
+        set taskStatus=#{taskStatus},retryCount=0,resultStatus=0,LASTUPDATE=NOW(),bizTime=now()
+        where id=#{id}
+        <!--   and        <![CDATA[ bizTime < now() ]]>-->
+    </update>
+
+    <update id="resetTaskByQuery" parameterType="Task">
+        update job_task
+        set taskStatus=#{pageNo},retryCount=0,resultStatus=0,LASTUPDATE=NOW(),bizTime=now()
+        where      <![CDATA[ bizTime < now() ]]>
+        <include refid="whereSelectiveSql"/>
+    </update>
+
+    <!--/* and resultStatus=0*/-->
+    <update id="updateResultStatus" parameterType="Task">
+        <![CDATA[
+
+			update   job_task  set resultStatus = #{resultStatus} ,LASTUPDATE=NOW() where uuid = #{uuid}
+
+        ]]>
+    </update>
+
+    <update id="updateErrorMsg" parameterType="Task">
+        <![CDATA[
+
+			update   job_task  set errorMsg = #{errorMsg} ,LASTUPDATE=NOW() where id = #{id}
+
+        ]]>
+    </update>
+
+    <delete id="deleteFinishedTask" parameterType="Task">
+        <![CDATA[
+
+        DELETE FROM  job_task WHERE   id >=#{0} and id<=#{1}     and   taskStatus=2
+
+        ]]>
+    </delete>
+
+    <update id="batchLock">
+    <![CDATA[
+
+		  UPDATE  job_task set
+            taskStatus=1,lastUpdate=now()
+        WHERE id >=#{0} and id<=#{1} and taskStatus=0
+
+        ]]>
+    </update>
+
+
+</mapper>

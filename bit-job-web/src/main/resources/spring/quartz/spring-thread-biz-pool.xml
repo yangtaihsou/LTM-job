@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire="byName">
+    <!--处理具体定时任务的线程池们-->
+
+
+    <bean id="bizRejectionPolicy" class="io.bitjob.biz.executor.DiscardPolicyWithBizScheduleLog"/>
+
+    <!--线程池-->
+    <bean id="bizTaskThreadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          scope="prototype">
+        <!-- 核心线程数  -->
+        <property name="corePoolSize" value="10"/>
+        <!-- 最大线程数 -->
+        <property name="maxPoolSize" value="100"/>
+        <!-- 队列最大长度 -->
+        <property name="queueCapacity" value="500"/>
+        <!-- 线程池维护线程所允许的空闲时间 -->
+        <property name="keepAliveSeconds" value="5"/>
+        <!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+        <property name="rejectedExecutionHandler">
+            <bean parent="bizRejectionPolicy">
+                <property name="threadName" value="transSplitQueryTaskThreadPool"></property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="commonThreadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          scope="prototype">
+        <!-- 核心线程数  -->
+        <property name="corePoolSize" value="10"/>
+        <!-- 最大线程数 -->
+        <property name="maxPoolSize" value="20"/>
+        <!-- 队列最大长度 -->
+        <property name="queueCapacity" value="50"/>
+        <!-- 线程池维护线程所允许的空闲时间 -->
+        <property name="keepAliveSeconds" value="5"/>
+        <!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+        <property name="rejectedExecutionHandler">
+            <bean parent="bizRejectionPolicy">
+                <property name="threadName" value="transSplitQueryTaskThreadPool"></property>
+            </bean>
+        </property>
+    </bean>
+
+
+</beans>

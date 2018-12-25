@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       default-autowire="byName">
+
+    <!-- 定时解锁任务定时器 -->
+
+
+    <bean id="taskUnlockExecutor" class="io.bitjob.schedule.base.impl.TaskUnLockScheduleExecutorImpl">
+        <!--表示秒-->
+        <property name="splitSeconds" value="300"></property>
+        <property name="retryCount" value="30"></property>
+    </bean>
+
+
+    <bean id="taskUnlockHandler" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="taskUnlockExecutor"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="true"/>
+    </bean>
+
+    <!--
+        <bean id="taskUnlockCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail" ref="taskUnlockHandler" />
+            <property name="cronExpression" value="2 10 * * * ?" />
+        </bean>-->
+
+
+    <bean id="taskUnlockCronTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="jobDetail" ref="taskUnlockHandler"/>
+        <property name="repeatInterval" value="60000"/>
+        <property name="startDelay" value="1000"/>
+    </bean>
+
+    <!-- 定时任务触发器 -->
+    <bean id="taskUnlockScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+
+                <!--****************************-->
+                <!--******** 任务 ********-->
+                <!--****************************-->
+                <ref local="taskUnlockCronTrigger"/>
+
+            </list>
+        </property>
+        <property name="autoStartup">
+            <value>true</value>
+        </property>
+        <property name="schedulerName" value="解锁调度"/>
+    </bean>
+
+</beans>

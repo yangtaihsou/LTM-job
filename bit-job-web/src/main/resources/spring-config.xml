@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+       default-lazy-init="false" default-autowire="byName">
+
+    <aop:aspectj-autoproxy/>
+    <context:annotation-config/>
+    <!-- 属性文件读入 -->
+    <context:component-scan base-package="io.bitjob.**"/>
+
+    <bean
+            class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:props/*.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dateEditor" class="org.springframework.beans.factory.config.CustomEditorConfigurer"> <!--注册我们的类-->
+        <property name="customEditors">
+            <map>
+                <entry key="java.util.Date">
+                    <bean class="io.bitjob.util.DateEditor"></bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    <util:properties id="configMap" local-override="true"
+                     location="classpath:props/config.properties"></util:properties>
+    <!-- Spring配置文件读入 -->
+    <import resource="classpath:spring/spring-*.xml"/>
+    <import resource="classpath:spring/quartz/spring-*.xml"/>
+    <import resource="classpath:spring/quartz/base/spring-*.xml"/>
+    <import resource="classpath:spring/quartz/biz/spring-*.xml"/>
+</beans>
